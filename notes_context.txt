@@ -1,0 +1,303 @@
+Here’s a detailed overview of your Parametric Articulatory Voice Synth (CrowCrow) project as it stands, focusing on the files that matter for the synth, UI, and audio signal path.
+(Node.js configs and build files are omitted as requested.)
+
+Project Structure & File Roles
+public/index.html
+Purpose:
+The main HTML file for your app.
+What it does:
+Hosts the UI: Start/Stop button, phoneme buttons, parameter sliders, tract visualizer, oscilloscope, and parameter display.
+Related to:
+All UI event listeners and parameter updates in src/main.js.
+public/audio/processors/
+GlottisProcessor.js
+Purpose:
+AudioWorkletProcessor that simulates the glottis (vocal fold source).
+What it does:
+Receives parameters like frequency, tenseness, intensity, and loudness.
+Generates a periodic glottal pulse and adds noise (via SimplexNoise).
+Signal path:
+Receives input from SubglottalProcessor, outputs to TransientProcessor.
+SubglottalProcessor.js
+Purpose:
+AudioWorkletProcessor that simulates the subglottal system (lungs/breath).
+What it does:
+Receives parameters like breathCycleRate and effort.
+Calculates and outputs intensity and loudness, which are sent to the main thread and then to GlottisProcessor.
+Signal path:
+First node in the chain; outputs to GlottisProcessor.
+TransientProcessor.js
+Purpose:
+AudioWorkletProcessor for plosive bursts.
+What it does:
+Receives audio from GlottisProcessor.
+When triggered, injects a short burst of noise (for plosives) before passing audio to the next stage.
+Signal path:
+Receives from GlottisProcessor, outputs to both TractProcessor and NasalProcessor.
+TractProcessor.js
+Purpose:
+AudioWorkletProcessor that simulates the vocal tract as a series of segments.
+What it does:
+Each segment has a radius (controlled by zones).
+Applies delay and damping to shape the sound.
+Supports oral closure (for nasals/plosives) via the oralClosureZone parameter.
+Signal path:
+Receives from TransientProcessor, outputs to ChannelMergerNode (or gain).
+NasalProcessor.js
+Purpose:
+AudioWorkletProcessor that simulates the nasal tract.
+What it does:
+Receives the same input as TractProcessor (from TransientProcessor).
+Applies a simple formant filter (low-pass or resonator).
+Has a nasalCoupling parameter to gate the signal (0 = closed velum, 1 = open).
+Signal path:
+Receives from TransientProcessor, outputs to ChannelMergerNode (or gain).
+SimplexNoise.js
+Purpose:
+Utility for generating smooth noise.
+What it does:
+Used by GlottisProcessor for breath/noise components.
+src/main.js
+Purpose:
+The main JavaScript entry point and controller.
+What it does:
+Creates and connects all audio nodes (subglottal, glottis, transient, tract, nasal, gain, master gain, analyser).
+Handles UI event listeners for all sliders and buttons.
+Sets parameters and syncs between UI and audio nodes.
+Manages phoneme sequencing (via PhonemeSequencer).
+Gating and animating the master gain for discrete phoneme playback.
+Renders the parameter list and updates parameter displays.
+Draws the tract visualizer and oscilloscope.
+Handles synth start/stop logic and cleanup.
+Signal path:
+Orchestrates the entire audio signal chain and parameter flow.
+src/audio/audio-utils.js
+Purpose:
+Utility functions for audio.
+What it does:
+Functions like fadeInGain and fadeOutGain for smooth volume transitions, and other reusable audio helpers.
+src/audio/PhonemeSequencer.js
+Purpose:
+Class that manages triggering phonemes.
+What it does:
+Looks up phoneme parameters (including duration) from phonemeMap.js.
+Calls a global setParameters function to update the synth.
+Handles one-shot phoneme playback (no coarticulation yet).
+src/audio/parameterSetters.js
+Purpose:
+Functions to set parameters on audio nodes.
+What it does:
+Provides helpers to update AudioWorkletNode parameters from UI or phoneme presets.
+src/state/parameters.js
+Purpose:
+Exports parameter descriptor arrays.
+What it does:
+Lists all parameters for glottis, subglottal, and tract processors.
+Used for UI rendering and parameter syncing.
+src/state/phonemeMap.js
+Purpose:
+Exports a map of phoneme names to parameter sets.
+What it does:
+Each phoneme entry includes all relevant parameters (frequency, tenseness, zones, nasalCoupling, oralClosureZone, etc.) and a duration field.
+src/ui/tractViewer.js
+Purpose:
+Functions to draw the vocal tract shape on a canvas.
+What it does:
+Visualizes the current tract shape based on zone/radius parameters.
+src/ui/oscilloscope.js
+Purpose:
+Functions to draw the audio waveform in real time.
+What it does:
+Uses the analyser node to render the waveform on a canvas.
+src/ui/tractSliders.js
+Purpose:
+Handles the tract shape sliders in the UI.
+What it does:
+Syncs slider values with tract parameters and updates the tract visualizer.
+src/ui/parameterPanel.js
+Purpose:
+Handles the parameter display panel in the UI.
+What it does:
+Updates the parameter list to reflect current values.
+Audio Signal Path (Core of the Project)
+Current signal chain:
+SubglottalProcessor
+   │
+   ▼
+GlottisProcessor
+   │
+   ▼
+TransientProcessor
+   │
+   ├──► TractProcessor ──┐
+   │                     │
+   └──► NasalProcessor ──┘
+           │
+   [ChannelMergerNode or SummingProcessor]
+           │
+        GainNode (main gain)
+           │
+     MasterGainNode (for gating & master volume)
+           │
+      AnalyserNode (for oscilloscope visualization)
+           │
+   AudioContext.destination (speakers/headphones)
+
+
+
+
+
+Parameter flow:
+UI sliders set parameters for subglottal, glottis, and tract processors.
+SubglottalProcessor calculates intensity/loudness and sends them to GlottisProcessor.
+PhonemeSequencer can override parameters for one-shot phoneme playback, using gating on the master gain node for discrete output.
+Nasal coupling and oral closure are set per-phoneme for nasals.
+Summary Table
+File/Folder	Role/Responsibility
+public/index.html	UI layout, all controls and canvases
+public/audio/processors/*.js	AudioWorkletProcessors for each stage of the synth
+src/main.js	Main controller: node creation, connection, UI, parameter flow, event listeners
+src/audio/audio-utils.js	Audio helper functions
+src/audio/PhonemeSequencer.js	Phoneme triggering and sequencing
+src/audio/parameterSetters.js	Parameter update helpers
+src/state/parameters.js	Parameter descriptors for UI and syncing
+src/state/phonemeMap.js	Phoneme presets and parameter sets
+src/ui/tractViewer.js	Tract shape visualization
+src/ui/oscilloscope.js	Oscilloscope visualization
+src/ui/tractSliders.js	Tract slider UI logic
+src/ui/parameterPanel.js	Parameter display UI logic
+Key Points
+Audio signal path is modular and extensible, with each processor in its own file.
+main.js is the orchestrator, connecting everything and handling UI.
+PhonemeMap and PhonemeSequencer allow for easy extension to new phonemes and features.
+UI and visualization are handled in dedicated files for tract and oscilloscope.
+
+ Here’s a revised, prioritized, and grouped to-do list for your articulatory synth project, focusing on coverage, realism, and incremental complexity.
+Completed tasks (XXX) are omitted.
+
+No problem — here’s the same list in a **copy-paste friendly format** with numbers as part of the text (no bullets or formatting symbols):
+
+TODO LIST STARTS HERE :
+
+---
+
+A. Core Phoneme Coverage & Realism
+
+1. Add voiced/unvoiced gating — Needed for plosive pairs & fricatives XXX
+2. Add lip closure capability — Required for /p/, /b/, /m/ XXX
+3. Add tongue tip closure — Required for /t/, /d/, /n/, /l/ XXX
+4. Add tongue rear closure — Required for /k/, /g/, /ŋ/ XXX
+
+5. Add pressure-based release — Plosive release realism (burst character) XXX
+
+6. Add constriction jet modeling — Enables fricatives (/s/, /f/, /ʃ/, /h/, etc.) XXX
+7. Introduce NoiseSource abstraction — Modular, swappable noise (simplex, white, pink) XXX
+8. Enable airflow-modulated turbulence — Realistic fricative amplitude scaling XXX
+
+9. Add spectral shaping of noise — Makes /s/ sharp, /ʒ/ buzzy, etc. XXX
+10. Positionable noise source — Allows noise injection at precise tract points XXX
+11. Add voicing over fricatives — For /z/, /v/, /ʒ/ XXX
+12. Add glottal stop (/ʔ/) — Models complete closure at glottis XXX
+13. Add glottal fricatives (/h/) — Noise at glottis + voicing control XXX
+
+14. Implement affricate builder — Combine plosive + fricative (e.g., /tʃ/, /dʒ/) XXX
+
+B. Approximants, Glides, Laterals, Rhotics
+15\. Add velar approximants (/w/) — Lip rounding + rear constriction XXX
+16\. Add palatal approximants (/j/) — Tongue high front narrowing XXX
+17\. Add lateral airflow — Enables /l/ and lateral fricatives XXX
+18\. Add rhotic shaping (/ɹ/) — Retroflex / r-coloring effects XXX
+19\. Add glide interpolation — Smooth fast transitions (e.g., /j/, /w/) XXX
+
+C. Articulator Abstraction & Realism XXX
+20\. Articulator abstraction — High-level tongue, lips, velum mapping XXX
+21\. Tract length scaling — Simulates age, gender, body size XXX
+22\. Lip radiation filter — Realistic formant enhancement at mouth end XXX
+23\. Subglottal resonance (optional) — Low-frequency shaping below glottis XXX
+
+D. Advanced & Optional Features
+25\. Click consonant modeling — For full IPA coverage XXX
+26\. Trill and tap synthesis — For /r/ (Spanish), /ɾ/ (flap) XXX
+
+
+27\. Tract symmetry/asymmetry — Support independent left/right tract shaping for advanced laterals and clicks XXX
+
+
+
+E. Extend PhonemeSequencer and Diacritic Support 
+27. Extend PhonemeSequencer to support sequencing from a string input.
+28. Add a function `playFromText(input, spacing)` that accepts a space-separated string of phoneme symbols and a spacing value in seconds.
+29. Add UI controls to allow users to enter a phoneme string and trigger `playFromText` (e.g., a text box and play button). XXX
+30. Parse each token and extract diacritics from the phoneme symbol (e.g., "n̥" → base: "n", diacritics: ["̥"]).
+31. Create a helper function `applyDiacritics(baseParams, diacriticList)` that modifies the base phoneme parameters using predefined mappings:
+  a. "̥" → `voiced = 0`  
+  b. "̃" → `nasalCoupling = 1`  
+  c. "ʰ" → `aspirationLevel = 1`  
+  d. "ː" → `duration *= 1.5`
+32. For each parsed phoneme, look it up in `phonemeMap`, apply diacritic modifications using `applyDiacritics`, and schedule it using the existing playback mechanism.
+33. Add spacing to the current phoneme's duration to determine the next start time; allow negative spacing for overlap.
+34. Ensure Unicode normalization is used to handle combined diacritic input.
+
+35\. Add nasal fricatives (optional) — For rare IPA nasal+fricative blends
+
+
+F. Coarticulation & Expressivity
+36\. Coarticulation kernel — Overlapping gestures for realism
+37\. Coarticulation smoothing — Time-based easing of parameter transitions
+
+
+G. FULL IPA SUPPORT:
+38.    - Expand phonemeMap to include all IPA consonants and vowels
+39.    - Add support for all standard IPA diacritics (nasalization, voicing, aspiration, length, etc, clicks, trills/taps)
+
+40.    - Update UI and sequencer to handle new symbols
+
+---
+
+H. Glottalized & Laryngealized Sounds
+41. Add support for ejective consonants (e.g., pʼ, tʼ, kʼ, sʼ): implement glottal closure and pressure burst.
+42. Add support for implosive consonants (e.g., ɓ, ɗ, ɠ): implement inward glottal airflow and partial closure.
+43. Add support for creaky voice (laryngealization, e.g., [a̰]): implement periodic glottal constriction and irregular voicing.
+44. Add support for breathy voice (murmur, e.g., [b̤]): implement partially open glottis and mixed voicing/noise.
+45. Add diacritic handling for glottalization (e.g., ʼ, ̰, ̤) in phoneme parsing and parameter mapping.
+
+I. Expressive & Emotional Vocalizations
+
+46. Add support for falsetto phonation — Simulate high-pitched, light, airy voice (e.g., surprise, excitement).
+47. Add support for whisper phonation — Simulate voiceless, turbulent airflow (e.g., secrecy, fear).
+48. Add support for harsh voice — Simulate pressed, tense, rough phonation (e.g., anger, authority).
+49. Add support for breathy voice — Simulate soft, airy phonation (e.g., tenderness, fatigue).
+50.Add support for diplophonia — Simulate two simultaneous pitches (e.g., pathological or dramatic effect).
+51. Add support for tremolo/vibrato — Modulate pitch or amplitude for emotional emphasis (e.g., fear, excitement).
+52. Add support for shout/raised voice — Simulate increased subglottal pressure and intensity (e.g., anger, calling).
+53. Add support for sobbing/crying voice — Simulate irregular pitch, amplitude, and resonance (e.g., sadness, distress).
+54. Add support for laughter and giggle phonation — Simulate rhythmic, voiced/unvoiced bursts (e.g., joy, amusement).
+55. Add support for growl/rasp — Simulate low, rough, noisy phonation (e.g., anger, rock singing).
+56. Add support for sighing — Simulate long, breathy exhalation (e.g., relief, sadness).
+57. Add support for yawned voice — Simulate lowered larynx and widened tract (e.g., tiredness, boredom).
+
+
+
+
+Extras (If needed ):
+- Add voicenoiseBalance parameter — Controls the mix of voicing and noise for voiced fricatives and affricates
+- Parameter Dump per phoneme  
+- Tract illustration of laterals 
+
+MID TERM TODO LIST:
+
+- Phonemizer
+- Voice customization
+- AI Parametrization, train, predict.
+- AI LLM Expressivity
+- UI/UX improvements/review
+- Documentation and examples
+- Testing and debugging
+- Performance optimization
+- Deployment and distribution
+
+
+
+
+
+
