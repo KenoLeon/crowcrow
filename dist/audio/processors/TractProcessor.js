@@ -9,6 +9,22 @@ class TractProcessor extends AudioWorkletProcessor {
       { name: 'zone5', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
       { name: 'zone6', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
       { name: 'zone7', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft0', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft1', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft2', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft3', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft4', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft5', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft6', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractLeft7', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight0', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight1', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight2', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight3', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight4', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight5', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight6', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
+      { name: 'tractRight7', defaultValue: 0.5, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
       { name: 'oralClosureZone', defaultValue: -1, minValue: -1, maxValue: 7, automationRate: 'k-rate' },      
       { name: 'noiseInjectionZone', defaultValue: -1, minValue: -1, maxValue: 7, automationRate: 'k-rate' },
       { name: 'fricativeEffort', defaultValue: 0, minValue: 0, maxValue: 1, automationRate: 'k-rate' },
@@ -30,10 +46,26 @@ class TractProcessor extends AudioWorkletProcessor {
   // Interpolate zone values across the 44 segments, scaling by tractLength
   interpolateZones(parameters) {
     const tractLength = parameters.tractLength ? parameters.tractLength[0] : 1.0;
-    const zones = [];
+    // Check if tractLeft/tractRight are present and used (e.g. for laterals)
+    let useAsymmetry = false;
+    const left = [], right = [];
     for (let z = 0; z < this.numZones; z++) {
-      let zoneVal = parameters[`zone${z}`][0];
-      zones.push(zoneVal);
+      left.push(parameters[`tractLeft${z}`][0]);
+      right.push(parameters[`tractRight${z}`][0]);
+      // If any left/right value differs, enable asymmetry
+      if (Math.abs(left[z] - right[z]) > 0.001) useAsymmetry = true;
+    }
+    // If both arrays are present and not identical, use their average for mono tract
+    let zones = [];
+    if (useAsymmetry) {
+      for (let z = 0; z < this.numZones; z++) {
+        zones[z] = 0.5 * (left[z] + right[z]);
+      }
+    } else {
+      // Fallback to mono zone parameters
+      for (let z = 0; z < this.numZones; z++) {
+        zones[z] = parameters[`zone${z}`][0];
+      }
     }
     const boundaries = [0, 5, 11, 17, 23, 29, 35, 39, 44];
     for (let z = 0; z < this.numZones; z++) {
@@ -43,11 +75,8 @@ class TractProcessor extends AudioWorkletProcessor {
       const v1 = zones[Math.min(z + 1, this.numZones - 1)];
       const len = end - start;
       for (let s = start; s < end; s++) {
-        // Stretch or compress the logical position of each segment
-        // tractLength < 1: compress shape, tractLength > 1: stretch shape
         let t = len > 1 ? (s - start) / (len - 1) : 0;
         let scaledT = t * tractLength;
-        // Clamp scaledT to [0,1] to avoid extrapolation
         scaledT = Math.max(0, Math.min(1, scaledT));
         this.radii[s] = v0 + (v1 - v0) * scaledT;
       }

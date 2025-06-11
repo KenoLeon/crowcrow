@@ -225,9 +225,13 @@ D. Advanced & Optional Features
 
 
 E. Extend PhonemeSequencer and Diacritic Support 
-27. Extend PhonemeSequencer to support sequencing from a string input.
-28. Add a function `playFromText(input, spacing)` that accepts a space-separated string of phoneme symbols and a spacing value in seconds.
+27. Extend PhonemeSequencer to support sequencing from a string input. XXX
+28. Add a function `playFromText(input, spacing)` that accepts a space-separated string of phoneme symbols and a spacing value in seconds. XXX
 29. Add UI controls to allow users to enter a phoneme string and trigger `playFromText` (e.g., a text box and play button). XXX
+
+
+
+
 30. Parse each token and extract diacritics from the phoneme symbol (e.g., "n̥" → base: "n", diacritics: ["̥"]).
 31. Create a helper function `applyDiacritics(baseParams, diacriticList)` that modifies the base phoneme parameters using predefined mappings:
   a. "̥" → `voiced = 0`  

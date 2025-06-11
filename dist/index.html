@@ -33,7 +33,6 @@
               <button id="u" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/u/</button>
             </div>
             <!-- Plosives -->
-            <!-- Plosives -->
             <div class="w-100 text-center">
               <div class="small text-secondary mb-1">Plosives</div>
             </div>
@@ -62,7 +61,7 @@
             </div>
             <div class="mb-2 w-100 d-flex justify-content-between">
               <!-- <button id="l" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/l/</button> -->
-              <button id="r" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɹ/</button>
+              <button id="ɹ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɹ/</button>
               <button id="j" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/j/</button>
               <button id="w" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/w/</button>
             </div>
@@ -99,12 +98,16 @@
               <button id="ts" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ts/</button>
               <button id="dz" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/dz/</button>
             </div>
+
+          </div>
+
+          <div class="d-flex flex-column align-items-center text-light mb-3 mb-md-0 flex-fill" style="min-width:140px;">
             <!-- Laterals -->
             <div class="w-100 text-center">
               <div class="small text-secondary mb-1">Laterals</div>
             </div>
             <div class="mb-2 w-100 d-flex justify-content-between">
-              <button id="l" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/l/</button>              
+              <button id="l" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/l/</button>
               <button id="ɬ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɬ/</button>
               <button id="ɮ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɮ/</button>
             </div>
@@ -116,16 +119,94 @@
               <button id="ǀ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ǀ/</button>
               <button id="ǃ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ǃ/</button>
               <button id="ǂ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ǂ/</button>
-              <!-- Lateral click (requires tract asymmetry): -->
-              <button id="ǁ" class="btn btn-outline-secondary btn-sm flex-fill mx-1 py-1" disabled>/ǁ/</button>
-            </div>  
+              <button id="ǁ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ǁ/</button>
+            </div>
+            <!-- Taps -->
+            <div class="w-100 text-center">
+              <div class="small text-secondary mb-1">Taps</div>
+            </div>
+            <div class="mb-2 w-100 d-flex justify-content-between">
+              <button id="ɾ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɾ/</button>
+              <button id="ɽ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɽ/</button>
+              <button id="ɺ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ɺ/</button>
+            </div>
+            <!-- Trills -->
+            <div class="w-100 text-center">
+              <div class="small text-secondary mb-1">Trills</div>
+            </div>
+            <div class="mb-2 w-100 d-flex justify-content-between">
+              <button id="r" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/r/</button>
+              <button id="ʙ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ʙ/</button>
+              <button id="ʀ" class="btn btn-outline-light btn-sm flex-fill mx-1 py-1">/ʀ/</button>
+            </div>
+
+            <!-- === BEGIN: Word/Phoneme String Input Block (move as needed) === -->
+            <div class="p-2 mt-2 mb-3 bg-dark rounded border border-secondary shadow-sm w-100">
+              <div class="fw-bold text-uppercase text-center small mb-1">Word or Phoneme String</div>
+              <div class="mb-2">
+                <input type="text" id="wordPhonemeInput" class="form-control form-control-sm" placeholder=""
+                  autocomplete="off">
+              </div>
+              <div class="d-flex justify-content-center">
+                <button id="playWordPhonemeBtn" class="btn btn-secondary btn-sm">Play</button>
+              </div>
+              <div class="small text-secondary mt-1 text-center">
+                Type word (cat) or phonemes (k a t)"
+              </div>
+            </div>
+            <!-- === END: Word/Phoneme String Input Block === -->
+            <!-- === BEGIN: Demo Words & Phoneme Strings List (for testing, not linked to JS) === -->
+            <div class="p-2 mb-2 bg-dark rounded border border-secondary shadow-sm w-100"
+              style="max-height:110px; overflow-y:auto;">
+              <div class="fw-bold text-uppercase text-center small mb-1">Demo Words & Phoneme Strings</div>
+              <ul class="small text-secondary mb-0 text-center" style="list-style:none; padding-left:0;">
+                <li>cat <span class="text-secondary">→ k a t</span></li>
+                <li>dog <span class="text-secondary">→ d a g</span></li>
+                <li>man <span class="text-secondary">→ m a n</span></li>
+                <li>lid <span class="text-secondary">→ l i d</span></li>
+                <li>kid <span class="text-secondary">→ k i d</span></li>
+                <li>big <span class="text-secondary">→ b i g</span></li>
+                <li>dig <span class="text-secondary">→ d i g</span></li>
+                <li>pan <span class="text-secondary">→ p a n</span></li>
+                <li>fan <span class="text-secondary">→ f a n</span></li>
+                <li>van <span class="text-secondary">→ v a n</span></li>
+                <li>sin <span class="text-secondary">→ s i n</span></li>
+                <li>sun <span class="text-secondary">→ s a n</span></li>
+                <li>sing <span class="text-secondary">→ s i ng</span></li>
+                <li>run <span class="text-secondary">→ r a n</span></li>
+                <li>win <span class="text-secondary">→ w i n</span></li>
+                <li>zip <span class="text-secondary">→ z i p</span></li>
+                <li>ship <span class="text-secondary">→ sh i p</span></li>
+                <li>chin <span class="text-secondary">→ tʃ i n</span></li>
+                <li>jam <span class="text-secondary">→ dʒ a m</span></li>
+                <li>lap <span class="text-secondary">→ l a p</span></li>
+                <li>mat <span class="text-secondary">→ m a t</span></li>
+                <li>nap <span class="text-secondary">→ n a p</span></li>
+                <li>bag <span class="text-secondary">→ b a g</span></li>
+                <li>tap <span class="text-secondary">→ t a p</span></li>
+                <li>zap <span class="text-secondary">→ z a p</span></li>
+              </ul>
+              <div class="small text-secondary text-center">(Type any word or its phoneme string above and press Play)
+              </div>
+            </div>
+            <!-- === END: Demo Words & Phoneme Strings List === -->
+
 
           </div>
+
+
+
+
+
+
+
+
+
 
           <!-- 2. Subglottal & Glottis Column -->
           <div class="d-flex flex-column align-items-center text-light mb-3 mb-md-0 flex-fill" style="min-width:180px;">
 
-            
+
             <!-- Subglottal Section -->
             <div class="p-1 mb-2 bg-dark rounded border border-secondary shadow-sm w-100">
               <div class="fw-bold text-uppercase text-center small mb-0">Subglottal</div>
@@ -175,7 +256,7 @@
               </div>
               <div class="text-center text-secondary small mt-1">+ Noise input</div>
             </div>
-            
+
             <div class="p-1 mb-2 bg-dark rounded border border-secondary shadow-sm w-100">
               <div class="slider-label text-center small mb-1">Chestiness</div>
               <input type="range" class="form-range" min="0" max="1" step="0.01" value="0.5" id="chestinessSlider"
