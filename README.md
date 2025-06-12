@@ -38,10 +38,10 @@ This repo is not under active development, but is preserved as an artifact for r
   ![CrowCrow UI](public/screenshots/ui-overview.png)
 
 - **Phoneme Text Input:**  
-  ![Phoneme Text Input](public/screenshots/phoneme-input.png)
+  <img src="public/screenshots/phoneme-input.png" alt="Phoneme Text Input" width="350"/>
 
 - **Tract Visualizer & Oscilloscope:**  
-  ![Tract and Oscilloscope](public/screenshots/tract-oscilloscope.png)
+  <img src="public/screenshots/tract-oscilloscope.png" alt="Tract and Oscilloscope" width="350"/>
 
 ---
 
