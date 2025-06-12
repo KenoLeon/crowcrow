@@ -42,7 +42,7 @@ This repo is not under active development, but is preserved as an artifact for r
 
 - **Phoneme Text Input:**  
   <img src="public/screenshots/phoneme-input.png" alt="Phoneme Text Input" height="300"/>
-  
+
 ---
 
 ## Getting Started
@@ -154,8 +154,8 @@ MIT License (see [LICENSE](LICENSE))
 
 ## Credits
 
-- Created by Keno Leon
-- Inspired by Pink Trombone and other open-source speech synthesis projects
+- Created by [Keno Leon](https://www.k3no.com)
+- Inspired by [Pink Trombone](https://github.com/zakaton/Pink-Trombone) and other open-source speech synthesis projects
 
 ---
 
