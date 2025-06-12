@@ -64,7 +64,7 @@ async function startSynth() {
   audioContext = new AudioContext();
 
   // Load processors
-  await audioContext.audioWorklet.addModule('/audio/processors/NoiseProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/NoiseProcessor.js');
   await audioContext.audioWorklet.addModule('/audio/processors/SubglottalProcessor.js');
   await audioContext.audioWorklet.addModule('/audio/processors/GlottisProcessor.js');
   await audioContext.audioWorklet.addModule('/audio/processors/TransientProcessor.js');
