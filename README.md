@@ -14,7 +14,7 @@ This branch is not under active development, but is preserved as an artifact for
 
 - Real-time articulatory speech synthesis in the browser (Web Audio API + AudioWorklet)
 - Modular, extensible audio engine (Glottis, Tract, Nasal, Click, Tap, Trill, etc.)
-- Full IPA phoneme coverage (vowels, plosives, fricatives, nasals, clicks, trills, taps, etc.)
+- Partial IPA phoneme coverage (vowels, plosives, fricatives, nasals, clicks, trills, taps, etc.)
 - Interactive UI: phoneme buttons, tract visualizer, oscilloscope, parameter sliders
 - Phoneme text input and sequencer for custom utterances
 - Designed for research, education, and creative coding
@@ -61,7 +61,9 @@ npm start
 
 ## Usage
 
+- **Start Synth** else you wont hear a thing.
 - **Click phoneme buttons** to hear individual sounds.
+- **Move the master Gain** to hear a continuous waveform.  
 - **Adjust sliders** for pitch, tenseness, tract shape, etc.
 - **Enter a sequence** in the phoneme text input and press "Play" to synthesize custom utterances.
 - **Watch the tract visualizer and oscilloscope** update in real time.
@@ -70,7 +72,7 @@ npm start
 
 ## Architecture
 
-- **Audio Signal Chain:**  
+- **Audio Signal Chain:**
   Subglottal → Glottis → Chestiness → Transient → Tract/Nasal/Click/Tap/Trill → Summing → Gain → Master Gain → Analyser → Output
 
 - **Processors:**  
@@ -83,7 +85,7 @@ npm start
 ## Phoneme Map
 
 - All phonemes are defined in [`src/state/phonemeMap.js`](src/state/phonemeMap.js) using articulator parameters.
-- You can add or modify phonemes by editing this file.
+- You can add or modify phonemes by editing this file and the UI.
 
 ---
 
