@@ -6,9 +6,14 @@
 ---
 
 **CrowCrow** is an experimental, browser-based parametric articulatory speech synthesizer.  
-This branch is not under active development, but is preserved as an artifact for reference, inspiration, or further research.
-
+This repo is not under active development, but is preserved as an artifact for reference, inspiration, or further research.
 ---
+
+> **Note:**  
+> Like many experimental projects, some paths lead you nowhere but inform your future work.  
+> CrowCrow began as an attempt to build a fully parametric TTS synth that could be AI-driven for future embodiment, as an alternative to current dataset/diffusion-based TTS.  
+> However, since the synth itself is not the main focus and lacks essential features like a phonemizer, coarticulation, and prosody (which are better served with a different architecture), a full rewrite would be needed for production use.
+
 
 ## Features
 
@@ -72,8 +77,52 @@ npm start
 
 ## Architecture
 
-- **Audio Signal Chain:**
-  Subglottal → Glottis → Chestiness → Transient → Tract/Nasal/Click/Tap/Trill → Summing → Gain → Master Gain → Analyser → Output
+- ### Audio Graph Topology
+
+```
+[subglottalNode]
+      │
+[noiseNode]─────┐
+      │         │
+  [glottisNode] │
+      │         │
+[chestinessNode]│
+      │         │
+[transientNode] │
+   │     │      │
+   │     └─────────────┐
+   │                   │
+[tractNode]        [nasalNode]
+   │                   │
+   └─────┬─────┬───────┘
+         │     │
+  [clickNode]  │
+  [tapNode]    │
+  [trillNode]  │
+         │     │
+    [summingNode]
+          │
+      [gainNode]
+          │
+  [masterGainNode]
+          │
+    [analyserNode]
+          │
+[audioContext.destination]
+```
+
+**Legend:**
+- `subglottalNode`: Simulates subglottal pressure (lungs)
+- `noiseNode`: Generates noise for fricatives, aspiration, etc.
+- `glottisNode`: Simulates vocal fold vibration and voicing
+- `chestinessNode`: Adds chest resonance
+- `transientNode`: Handles plosive bursts and transients
+- `tractNode`: Main vocal tract filter (8 zones, 44 segments)
+- `nasalNode`: Simulates nasal tract coupling
+- `clickNode`, `tapNode`, `trillNode`: Special consonant bursts
+- `summingNode`: Sums oral, nasal, click, tap, trill outputs
+- `gainNode`, `masterGainNode`: Output gain control
+- `analyserNode`: For oscilloscope/visualization
 
 - **Processors:**  
   - `public/audio/processors/`: AudioWorkletProcessors for each stage
@@ -112,7 +161,7 @@ MIT License (see [LICENSE](LICENSE))
 
 ## Status
 
-**This branch is experimental and will not be developed further.**  
+**This repo is experimental and will not be developed further.**  
 It is preserved as a reference artifact for the community.
 
 ---
