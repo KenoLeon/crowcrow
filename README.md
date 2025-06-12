@@ -37,12 +37,12 @@ This repo is not under active development, but is preserved as an artifact for r
 - **Full UI:**  
   ![CrowCrow UI](public/screenshots/ui-overview.png)
 
-- **Phoneme Text Input:**  
-  <img src="public/screenshots/phoneme-input.png" alt="Phoneme Text Input" height="400"/>
-
 - **Tract Visualizer & Oscilloscope:**  
   <img src="public/screenshots/tract-oscilloscope.png" alt="Tract and Oscilloscope" width="400"/>
 
+- **Phoneme Text Input:**  
+  <img src="public/screenshots/phoneme-input.png" alt="Phoneme Text Input" height="300"/>
+  
 ---
 
 ## Getting Started
