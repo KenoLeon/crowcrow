@@ -65,16 +65,16 @@ async function startSynth() {
 
   // Load processors
   await audioContext.audioWorklet.addModule('audio/processors/NoiseProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/SubglottalProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/GlottisProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/TransientProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/ChestinessProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/TractProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/NasalProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/SummingProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/ClickProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/TapProcessor.js');
-  await audioContext.audioWorklet.addModule('/audio/processors/TrillProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/SubglottalProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/GlottisProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/TransientProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/ChestinessProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/TractProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/NasalProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/SummingProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/ClickProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/TapProcessor.js');
+  await audioContext.audioWorklet.addModule('audio/processors/TrillProcessor.js');
 
 
   // Create nodes
