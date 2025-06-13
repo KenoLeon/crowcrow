@@ -14,6 +14,9 @@ This repo is not under active development, but is preserved as an artifact for r
 > CrowCrow began as an attempt to build a fully parametric TTS synth that could be AI-driven for future embodiment, as an alternative to current dataset/diffusion-based TTS.  
 > However, since the synth itself is not the main focus and lacks essential features like a phonemizer, coarticulation, and prosody (which are better served with a different architecture), a full rewrite would be needed for production use.
 
+**Companion Post:**  
+<a href="https://medium.com/@k3no/embodied-speech-for-ais-2766508a4a47" target="_blank">Embodied speech for AIs</a> — A short introduction to the ideas behind this project.
+
 
 ## Features
 
